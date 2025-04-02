@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Player Score Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+        h1, h2 {
+            text-align: center;
+            color: #444;
+        }
+        .hidden {
+            display: none;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: #fff;
+        }
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #eee;
+        }
+        input[type="number"] {
+            width: 100%;
+            box-sizing: border-box;
+            text-align: center;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #5cb85c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #4cae4c;
+        }
+        .controls {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .summary {
+            margin-top: 30px;
+        }
+        .summary table {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Player Score Calculator</h1>
+    <div id="player-setup">
+        <label for="numPlayers">Enter the number of players: </label>
+        <input type="number" id="numPlayers" min="1" />
+        <button id="setupPlayers">Next</button>
+    </div>
+
+    <div id="player-names" class="hidden">
+        <h2>Enter Player Names</h2>
+        <div id="nameInputs"></div>
+        <button id="generateTable">Generate Score Table</button>
+    </div>
+
+    <div id="score-table" class="hidden">
+        <h2>Score Table</h2>
+        <table>
+            <thead>
+                <tr id="tableHeader">
+                    <th>Game</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+            </tbody>
+            <tfoot>
+                <tr id="totalRow">
+                    <td>Total</td>
+                </tr>
+            </tfoot>
+        </table>
+        <div class="controls">
+            <button id="addGame">Next Game</button>
+        </div>
+    </div>
+
+    <div class="summary hidden" id="summarySection">
+        <h2>Summary</h2>
+        <div id="regularSummary">
+            <h3>Regular Scores</h3>
+            <table id="regularTable"></table>
+        </div>
+        <div id="negativeSummary">
+            <h3>Net Scores (Per Game)</h3>
+            <table id="negativeTable"></table>
+        </div>
+    </div>
+
+    <script>
+        const numPlayersInput = document.getElementById('numPlayers');
+        const setupPlayersButton = document.getElementById('setupPlayers');
+        const playerSetupDiv = document.getElementById('player-setup');
+        const playerNamesDiv = document.getElementById('player-names');
+        const nameInputsDiv = document.getElementById('nameInputs');
+        const generateTableButton = document.getElementById('generateTable');
+        const scoreTableDiv = document.getElementById('score-table');
+        const tableHeader = document.getElementById('tableHeader');
+        const tableBody = document.getElementById('tableBody');
+        const totalRow = document.getElementById('totalRow');
+        const addGameButton = document.getElementById('addGame');
+        const summarySection = document.getElementById('summarySection');
+        const regularTable = document.getElementById('regularTable');
+        const negativeTable = document.getElementById('negativeTable');
+
+        let playerNames = [];
+        let gameCounter = 0;
+        let scores = [];
+        let perGameScores = [];
+
+        setupPlayersButton.addEventListener('click', () => {
+            const numPlayers = parseInt(numPlayersInput.value);
+            if (numPlayers > 0) {
+                nameInputsDiv.innerHTML = '';
+                for (let i = 0; i < numPlayers; i++) {
+                    const input = document.createElement('input');
+                    input.type = 'text';
+                    input.placeholder = `Player ${i + 1} Name`;
+                    input.required = true;
+                    nameInputsDiv.appendChild(input);
+                }
+                playerSetupDiv.classList.add('hidden');
+                playerNamesDiv.classList.remove('hidden');
+            } else {
+                alert('Please enter a valid number of players.');
+            }
+        });
+
+        generateTableButton.addEventListener('click', () => {
+            const nameInputs = nameInputsDiv.querySelectorAll('input');
+            playerNames = Array.from(nameInputs).map(input => input.value || 'Player');
+            scores = Array(playerNames.length).fill(0);
+
+            tableHeader.innerHTML = '<th>Game</th>';
+            playerNames.forEach(name => {
+                const th = document.createElement('th');
+                th.textContent = name;
+                tableHeader.appendChild(th);
+
+                const totalCell = document.createElement('td');
+                totalCell.textContent = 0;
+                totalRow.appendChild(totalCell);
+            });
+
+            tableBody.innerHTML = '';
+            playerNamesDiv.classList.add('hidden');
+            scoreTableDiv.classList.remove('hidden');
+        });
+
+        addGameButton.addEventListener('click', () => {
+            gameCounter++;
+            const row = document.createElement('tr');
+            const gameCell = document.createElement('td');
+            gameCell.textContent = `Game ${gameCounter}`;
+            row.appendChild(gameCell);
+
+            const gameScores = Array(playerNames.length).fill(0);
+
+            playerNames.forEach((_, index) => {
+                const scoreCell = document.createElement('td');
+                const scoreInput = document.createElement('input');
+                scoreInput.type = 'number';
+                scoreInput.value = 0;
+                scoreInput.addEventListener('input', () => {
+                    gameScores[index] = parseInt(scoreInput.value) || 0;
+                    scores[index] = Array.from(
+                        tableBody.querySelectorAll(`tr td:nth-child(${index + 2}) input`)
+                    ).reduce((sum, input) => sum + (parseInt(input.value) || 0), 0);
+                    updateScores();
+                });
+                scoreCell.appendChild(scoreInput);
+                row.appendChild(scoreCell);
+            });
+
+            tableBody.appendChild(row);
+            perGameScores.push(gameScores);
+            updateScores();
+        });
+
+        function updateScores() {
+            totalRow.querySelectorAll('td').forEach((cell, index) => {
+                if (index > 0) {
+                    cell.textContent = scores[index - 1];
+                }
+            });
+
+            updateSummary();
+        }
+
+        function updateSummary() {
+    // Regular Scores Table
+    regularTable.innerHTML = '<tr><th>Player</th><th>Total Score</th></tr>';
+    playerNames.forEach((name, index) => {
+        regularTable.innerHTML += `<tr><td>${name}</td><td>${scores[index]}</td></tr>`;
+    });
+
+    // Net Scores Table
+    negativeTable.innerHTML = '<tr><th>Game/Player</th></tr>';
+    const netScores = Array(playerNames.length).fill(0);
+
+    // Add player names as the first row
+    playerNames.forEach((name) => {
+        const th = document.createElement('th');
+        th.textContent = name;
+        negativeTable.querySelector('tr').appendChild(th);
+    });
+
+    // Add net scores for each game (row-wise)
+    perGameScores.forEach((gameScores, gameIndex) => {
+        const row = document.createElement('tr');
+        const gameCell = document.createElement('td');
+        gameCell.textContent = `Game ${gameIndex + 1}`;
+        row.appendChild(gameCell);
+
+        const totalSum = gameScores.reduce((sum, score) => sum + score, 0);
+
+        gameScores.forEach((score, playerIndex) => {
+            // If score is zero, set netScore to the totalSum (positive), otherwise subtract
+            const netScore = score === 0 ? totalSum : -score;
+            netScores[playerIndex] += netScore;
+
+            const cell = document.createElement('td');
+            cell.textContent = netScore;
+            row.appendChild(cell);
+        });
+
+        negativeTable.appendChild(row);
+    });
+
+    // Add total row
+    const totalRow = document.createElement('tr');
+    const totalCell = document.createElement('td');
+    totalCell.textContent = 'Total';
+    totalRow.appendChild(totalCell);
+
+    netScores.forEach((total) => {
+        const cell = document.createElement('td');
+        cell.textContent = total;
+        totalRow.appendChild(cell);
+    });
+
+    negativeTable.appendChild(totalRow);
+    summarySection.classList.remove('hidden');
+}
+
+    </script>
+</body>
+</html>
