@@ -46,6 +46,7 @@
             border: none;
             border-radius: 4px;
             cursor: pointer;
+            margin: 5px;
         }
         button:hover {
             background-color: #4cae4c;
@@ -60,23 +61,67 @@
         .summary table {
             margin-top: 10px;
         }
+        /* New tab styles */
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ddd;
+        }
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: #f1f1f1;
+            border: 1px solid #ddd;
+            border-bottom: none;
+            margin-right: 5px;
+            border-radius: 5px 5px 0 0;
+        }
+        .tab.active {
+            background-color: #fff;
+            border-bottom: 2px solid #5cb85c;
+        }
+        .tab-content {
+            display: none;
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-top: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .player-input {
+            margin: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
     </style>
 </head>
 <body>
     <h1>Player Score Calculator</h1>
-    <div id="player-setup">
-        <label for="numPlayers">Enter the number of players: </label>
-        <input type="number" id="numPlayers" min="1" />
-        <button id="setupPlayers">Next</button>
+    
+    <div class="tabs">
+        <div class="tab active" data-tab="setup">Setup</div>
+        <div class="tab" data-tab="scores">Scores</div>
+        <div class="tab" data-tab="summary">Summary</div>
     </div>
 
-    <div id="player-names" class="hidden">
-        <h2>Enter Player Names</h2>
-        <div id="nameInputs"></div>
-        <button id="generateTable">Generate Score Table</button>
+    <div id="setup" class="tab-content active">
+        <div id="player-setup">
+            <label for="numPlayers">Enter the number of players: </label>
+            <input type="number" id="numPlayers" min="1" />
+            <button id="setupPlayers">Next</button>
+        </div>
+
+        <div id="player-names" class="hidden">
+            <h2>Enter Player Names</h2>
+            <div id="nameInputs"></div>
+            <button id="generateTable">Start Scoring</button>
+        </div>
     </div>
 
-    <div id="score-table" class="hidden">
+    <div id="scores" class="tab-content">
         <h2>Score Table</h2>
         <table>
             <thead>
@@ -97,7 +142,7 @@
         </div>
     </div>
 
-    <div class="summary hidden" id="summarySection">
+    <div id="summary" class="tab-content">
         <h2>Summary</h2>
         <div id="regularSummary">
             <h3>Regular Scores</h3>
@@ -166,7 +211,9 @@
 
             tableBody.innerHTML = '';
             playerNamesDiv.classList.add('hidden');
-            scoreTableDiv.classList.remove('hidden');
+            
+            // Switch to scores tab
+            document.querySelector('.tab[data-tab="scores"]').click();
         });
 
         addGameButton.addEventListener('click', () => {
@@ -265,6 +312,18 @@
     summarySection.classList.remove('hidden');
 }
 
+        // Add tab switching functionality
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Remove active class from all tabs and contents
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                // Add active class to clicked tab and corresponding content
+                tab.classList.add('active');
+                document.getElementById(tab.dataset.tab).classList.add('active');
+            });
+        });
     </script>
 </body>
 </html>
