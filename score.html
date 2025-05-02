@@ -96,6 +96,218 @@
             border: 1px solid #ddd;
             border-radius: 4px;
         }
+        /* Animation styles */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes scorePop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(0); }
+        }
+
+        .score-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px;
+            background: #4CAF50;
+            color: white;
+            border-radius: 5px;
+            animation: fadeIn 0.5s ease-out;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .score-cell {
+            transition: all 0.3s ease;
+        }
+
+        .score-cell.updated {
+            animation: scorePop 0.5s ease;
+            background-color: #e8f5e9;
+        }
+
+        .tab-content {
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin: 20px 0;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .score-input {
+            width: 80px;
+            padding: 8px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .score-input:focus {
+            border-color: #4CAF50;
+            box-shadow: 0 0 5px rgba(76,175,80,0.3);
+            outline: none;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 15px 0;
+        }
+
+        .action-button {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .add-score {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .edit-score {
+            background-color: #2196F3;
+            color: white;
+        }
+
+        .delete-score {
+            background-color: #f44336;
+            color: white;
+        }
+
+        .action-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .player-name {
+            font-weight: bold;
+            color: #2196F3;
+        }
+
+        .total-score {
+            font-weight: bold;
+            color: #4CAF50;
+        }
+
+        .negative-score {
+            color: #f44336;
+        }
+
+        .positive-score {
+            color: #4CAF50;
+        }
+
+        .floating-scoreboard {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            z-index: 1000;
+            animation: scoreboardPop 0.5s ease-out;
+            display: none;
+        }
+
+        @keyframes scoreboardPop {
+            0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0; }
+            50% { transform: translate(-50%, -50%) scale(1.1); }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+
+        .scoreboard-title {
+            text-align: center;
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .player-score {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            margin: 5px 0;
+            background: #f8f9fa;
+            border-radius: 5px;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .player-score:nth-child(odd) {
+            background: #f1f3f5;
+        }
+
+        .player-name {
+            font-weight: bold;
+            color: #2196F3;
+        }
+
+        .total-score {
+            font-size: 20px;
+            font-weight: bold;
+            padding: 5px 15px;
+            border-radius: 20px;
+            animation: scorePop 0.5s ease;
+        }
+
+        .positive-score {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .negative-score {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .scoreboard-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: #666;
+            padding: 5px;
+        }
+
+        .scoreboard-close:hover {
+            color: #333;
+        }
+
+        .scoreboard-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -152,6 +364,13 @@
             <h3>Net Scores (Per Game)</h3>
             <table id="negativeTable"></table>
         </div>
+    </div>
+
+    <div class="scoreboard-overlay" id="scoreboardOverlay"></div>
+    <div class="floating-scoreboard" id="floatingScoreboard">
+        <button class="scoreboard-close" onclick="hideScoreboard()">×</button>
+        <div class="scoreboard-title">Current Scores</div>
+        <div id="scoreboardContent"></div>
     </div>
 
     <script>
@@ -216,6 +435,146 @@
             document.querySelector('.tab[data-tab="scores"]').click();
         });
 
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = 'score-notification';
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                setTimeout(() => notification.remove(), 500);
+            }, 2000);
+        }
+
+        function updateScoreCell(cell, value) {
+            cell.classList.add('updated');
+            cell.textContent = value;
+            setTimeout(() => cell.classList.remove('updated'), 500);
+        }
+
+        function createScoreInput(value, onChange) {
+            const input = document.createElement('input');
+            input.type = 'number';
+            input.className = 'score-input';
+            input.value = value;
+            input.addEventListener('input', onChange);
+            return input;
+        }
+
+        function showScoreboard() {
+            const scoreboard = document.getElementById('floatingScoreboard');
+            const overlay = document.getElementById('scoreboardOverlay');
+            const content = document.getElementById('scoreboardContent');
+            
+            // Clear previous content
+            content.innerHTML = '';
+            
+            // Add player scores
+            playerNames.forEach((name, index) => {
+                const scoreDiv = document.createElement('div');
+                scoreDiv.className = 'player-score';
+                const score = scores[index];
+                const scoreClass = score >= 0 ? 'positive-score' : 'negative-score';
+                
+                scoreDiv.innerHTML = `
+                    <span class="player-name">${name}</span>
+                    <span class="total-score ${scoreClass}">${score}</span>
+                `;
+                content.appendChild(scoreDiv);
+            });
+            
+            // Show scoreboard and overlay
+            scoreboard.style.display = 'block';
+            overlay.style.display = 'block';
+            
+            // Hide after 3 seconds
+            setTimeout(hideScoreboard, 3000);
+        }
+
+        function hideScoreboard() {
+            const scoreboard = document.getElementById('floatingScoreboard');
+            const overlay = document.getElementById('scoreboardOverlay');
+            scoreboard.style.display = 'none';
+            overlay.style.display = 'none';
+        }
+
+        function updateScores() {
+            totalRow.querySelectorAll('td').forEach((cell, index) => {
+                if (index > 0) {
+                    const newScore = scores[index - 1];
+                    updateScoreCell(cell, newScore);
+                }
+            });
+
+            // Show floating scoreboard when scores are updated
+            showScoreboard();
+            updateSummary();
+        }
+
+        function updateSummary() {
+            // Regular Scores Table
+            regularTable.innerHTML = '<tr><th>Player</th><th>Total Score</th></tr>';
+            playerNames.forEach((name, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td class="player-name">${name}</td>
+                    <td class="total-score">${scores[index]}</td>
+                `;
+                regularTable.appendChild(row);
+            });
+
+            // Net Scores Table
+            negativeTable.innerHTML = '<tr><th>Game/Player</th></tr>';
+            const netScores = Array(playerNames.length).fill(0);
+
+            // Add player names as headers
+            playerNames.forEach(name => {
+                const th = document.createElement('th');
+                th.textContent = name;
+                negativeTable.querySelector('tr').appendChild(th);
+            });
+
+            // Add net scores for each game
+            perGameScores.forEach((gameScores, gameIndex) => {
+                const row = document.createElement('tr');
+                const gameCell = document.createElement('td');
+                gameCell.textContent = `Game ${gameIndex + 1}`;
+                row.appendChild(gameCell);
+
+                const totalSum = gameScores.reduce((sum, score) => sum + score, 0);
+
+                gameScores.forEach((score, playerIndex) => {
+                    const netScore = score === 0 ? totalSum : -score;
+                    netScores[playerIndex] += netScore;
+
+                    const cell = document.createElement('td');
+                    cell.textContent = netScore;
+                    cell.className = netScore >= 0 ? 'positive-score' : 'negative-score';
+                    row.appendChild(cell);
+                });
+
+                negativeTable.appendChild(row);
+            });
+
+            // Add total row with animations
+            const totalRow = document.createElement('tr');
+            const totalCell = document.createElement('td');
+            totalCell.textContent = 'Total';
+            totalRow.appendChild(totalCell);
+
+            netScores.forEach((total) => {
+                const cell = document.createElement('td');
+                cell.textContent = total;
+                cell.className = total >= 0 ? 'positive-score' : 'negative-score';
+                totalRow.appendChild(cell);
+            });
+
+            negativeTable.appendChild(totalRow);
+            summarySection.classList.remove('hidden');
+        }
+
+        // Modify the addGameButton click handler
         addGameButton.addEventListener('click', () => {
             gameCounter++;
             const row = document.createElement('tr');
@@ -227,10 +586,7 @@
 
             playerNames.forEach((_, index) => {
                 const scoreCell = document.createElement('td');
-                const scoreInput = document.createElement('input');
-                scoreInput.type = 'number';
-                scoreInput.value = 0;
-                scoreInput.addEventListener('input', () => {
+                const scoreInput = createScoreInput(0, () => {
                     gameScores[index] = parseInt(scoreInput.value) || 0;
                     scores[index] = Array.from(
                         tableBody.querySelectorAll(`tr td:nth-child(${index + 2}) input`)
@@ -244,86 +600,29 @@
             tableBody.appendChild(row);
             perGameScores.push(gameScores);
             updateScores();
+
+            // Show notification for new game
+            showNotification(`Game ${gameCounter} started!`);
         });
 
-        function updateScores() {
-            totalRow.querySelectorAll('td').forEach((cell, index) => {
-                if (index > 0) {
-                    cell.textContent = scores[index - 1];
-                }
-            });
-
-            updateSummary();
-        }
-
-        function updateSummary() {
-    // Regular Scores Table
-    regularTable.innerHTML = '<tr><th>Player</th><th>Total Score</th></tr>';
-    playerNames.forEach((name, index) => {
-        regularTable.innerHTML += `<tr><td>${name}</td><td>${scores[index]}</td></tr>`;
-    });
-
-    // Net Scores Table
-    negativeTable.innerHTML = '<tr><th>Game/Player</th></tr>';
-    const netScores = Array(playerNames.length).fill(0);
-
-    // Add player names as the first row
-    playerNames.forEach((name) => {
-        const th = document.createElement('th');
-        th.textContent = name;
-        negativeTable.querySelector('tr').appendChild(th);
-    });
-
-    // Add net scores for each game (row-wise)
-    perGameScores.forEach((gameScores, gameIndex) => {
-        const row = document.createElement('tr');
-        const gameCell = document.createElement('td');
-        gameCell.textContent = `Game ${gameIndex + 1}`;
-        row.appendChild(gameCell);
-
-        const totalSum = gameScores.reduce((sum, score) => sum + score, 0);
-
-        gameScores.forEach((score, playerIndex) => {
-            // If score is zero, set netScore to the totalSum (positive), otherwise subtract
-            const netScore = score === 0 ? totalSum : -score;
-            netScores[playerIndex] += netScore;
-
-            const cell = document.createElement('td');
-            cell.textContent = netScore;
-            row.appendChild(cell);
-        });
-
-        negativeTable.appendChild(row);
-    });
-
-    // Add total row
-    const totalRow = document.createElement('tr');
-    const totalCell = document.createElement('td');
-    totalCell.textContent = 'Total';
-    totalRow.appendChild(totalCell);
-
-    netScores.forEach((total) => {
-        const cell = document.createElement('td');
-        cell.textContent = total;
-        totalRow.appendChild(cell);
-    });
-
-    negativeTable.appendChild(totalRow);
-    summarySection.classList.remove('hidden');
-}
-
-        // Add tab switching functionality
+        // Add tab switching functionality with animations
         document.querySelectorAll('.tab').forEach(tab => {
             tab.addEventListener('click', () => {
-                // Remove active class from all tabs and contents
                 document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => {
+                    c.classList.remove('active');
+                    c.style.display = 'none';
+                });
                 
-                // Add active class to clicked tab and corresponding content
                 tab.classList.add('active');
-                document.getElementById(tab.dataset.tab).classList.add('active');
+                const content = document.getElementById(tab.dataset.tab);
+                content.style.display = 'block';
+                content.classList.add('active');
             });
         });
+
+        // Add click event to overlay to close scoreboard
+        document.getElementById('scoreboardOverlay').addEventListener('click', hideScoreboard);
     </script>
 </body>
 </html>
