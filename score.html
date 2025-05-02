@@ -23,16 +23,20 @@
             border-collapse: collapse;
             margin-top: 20px;
             background: #fff;
-        }
-        table, th, td {
-            border: 1px solid #ccc;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            overflow: hidden;
         }
         th, td {
-            padding: 10px;
+            padding: 15px;
             text-align: center;
+            border: 1px solid #eee;
         }
         th {
-            background-color: #eee;
+            background: linear-gradient(135deg, #2196F3, #1976D2);
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
         }
         input[type="number"] {
             width: 100%;
@@ -53,7 +57,7 @@
         }
         .controls {
             text-align: center;
-            margin-top: 20px;
+            margin: 20px 0;
         }
         .summary {
             margin-top: 30px;
@@ -103,8 +107,8 @@
         }
 
         @keyframes scorePop {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.2); }
+            0% { transform: scale(0.8); }
+            50% { transform: scale(1.1); }
             100% { transform: scale(1); }
         }
 
@@ -151,14 +155,15 @@
             width: 80px;
             padding: 8px;
             border: 2px solid #ddd;
-            border-radius: 4px;
+            border-radius: 8px;
             text-align: center;
+            font-size: 16px;
             transition: all 0.3s ease;
         }
 
         .score-input:focus {
-            border-color: #4CAF50;
-            box-shadow: 0 0 5px rgba(76,175,80,0.3);
+            border-color: #2196F3;
+            box-shadow: 0 0 8px rgba(33,150,243,0.3);
             outline: none;
         }
 
@@ -221,81 +226,127 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: rgba(255, 255, 255, 0.95);
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            background: rgba(255, 255, 255, 0.98);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
             z-index: 1000;
             animation: scoreboardPop 0.5s ease-out;
             display: none;
-        }
-
-        @keyframes scoreboardPop {
-            0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0; }
-            50% { transform: translate(-50%, -50%) scale(1.1); }
-            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-        }
-
-        .scoreboard-title {
-            text-align: center;
-            font-size: 24px;
-            color: #333;
-            margin-bottom: 15px;
-            font-weight: bold;
+            min-width: 350px;
         }
 
         .player-score {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 20px;
-            margin: 5px 0;
+            padding: 15px 25px;
+            margin: 8px 0;
             background: #f8f9fa;
-            border-radius: 5px;
+            border-radius: 10px;
             animation: slideIn 0.3s ease-out;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
 
-        .player-score:nth-child(odd) {
-            background: #f1f3f5;
+        .player-score::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: translateX(-100%);
+            animation: shine 2s infinite;
+        }
+
+        @keyframes shine {
+            100% { transform: translateX(100%); }
+        }
+
+        .total-score {
+            font-size: 28px;
+            font-weight: bold;
+            padding: 10px 25px;
+            border-radius: 25px;
+            animation: scorePop 0.5s ease;
+            min-width: 100px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .positive-score {
+            background: linear-gradient(135deg, #81c784, #4caf50);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 15px rgba(76,175,80,0.3);
+        }
+
+        .negative-score {
+            background: linear-gradient(135deg, #e57373, #f44336);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 15px rgba(244,67,54,0.3);
+        }
+
+        .score-change {
+            font-size: 16px;
+            margin-left: 15px;
+            padding: 6px 12px;
+            border-radius: 15px;
+            animation: fadeIn 0.3s ease-out;
+            font-weight: bold;
+        }
+
+        .score-increase {
+            background: linear-gradient(135deg, #81c784, #4caf50);
+            color: white;
+        }
+
+        .score-decrease {
+            background: linear-gradient(135deg, #e57373, #f44336);
+            color: white;
         }
 
         .player-name {
             font-weight: bold;
             color: #2196F3;
-        }
-
-        .total-score {
             font-size: 20px;
-            font-weight: bold;
-            padding: 5px 15px;
-            border-radius: 20px;
-            animation: scorePop 0.5s ease;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
         }
 
-        .positive-score {
-            background: #e8f5e9;
-            color: #2e7d32;
-        }
-
-        .negative-score {
-            background: #ffebee;
-            color: #c62828;
-        }
-
-        .scoreboard-close {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: none;
-            border: none;
-            font-size: 20px;
-            cursor: pointer;
-            color: #666;
-            padding: 5px;
-        }
-
-        .scoreboard-close:hover {
+        .scoreboard-title {
+            text-align: center;
+            font-size: 32px;
             color: #333;
+            margin-bottom: 25px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .game-number {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #2196F3, #1976D2);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(33,150,243,0.3);
+            font-size: 18px;
+        }
+
+        @keyframes scorePop {
+            0% { transform: scale(0.8); opacity: 0; }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); opacity: 1; }
         }
 
         .scoreboard-overlay {
@@ -304,9 +355,167 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0,0,0,0.5);
+            background: rgba(0,0,0,0.8);
             z-index: 999;
             display: none;
+            animation: fadeIn 0.3s ease-out;
+            backdrop-filter: blur(5px);
+        }
+
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background-color: #f00;
+            animation: confetti-fall 3s ease-in infinite;
+            z-index: 1001;
+        }
+
+        @keyframes confetti-fall {
+            0% { transform: translateY(-100vh) rotate(0deg); }
+            100% { transform: translateY(100vh) rotate(360deg); }
+        }
+
+        .live-scores {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            z-index: 100;
+            min-width: 250px;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .live-score-title {
+            text-align: center;
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 15px;
+            font-weight: bold;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .live-player-score {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            margin: 5px 0;
+            background: #f8f9fa;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .live-player-score:hover {
+            transform: translateX(-5px);
+            background: #f1f3f5;
+        }
+
+        .live-player-name {
+            font-weight: bold;
+            color: #2196F3;
+        }
+
+        .live-total-score {
+            font-size: 18px;
+            font-weight: bold;
+            padding: 5px 15px;
+            border-radius: 15px;
+            animation: scorePop 0.5s ease;
+            transition: all 0.3s ease;
+        }
+
+        .live-total-score.updated {
+            animation: scorePop 0.5s ease;
+            transform: scale(1.1);
+        }
+
+        .live-positive-score {
+            background: linear-gradient(135deg, #81c784, #4caf50);
+            color: white;
+        }
+
+        .live-negative-score {
+            background: linear-gradient(135deg, #e57373, #f44336);
+            color: white;
+        }
+
+        .game-indicator {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2196F3;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        @keyframes scorePop {
+            0% { transform: scale(0.8); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+
+        /* Remove old floating scoreboard styles */
+        .floating-scoreboard, .scoreboard-overlay {
+            display: none !important;
+        }
+
+        .total-row {
+            background: #f8f9fa;
+            font-weight: bold;
+        }
+
+        .total-cell {
+            font-size: 18px;
+            padding: 12px;
+            animation: scorePop 0.5s ease;
+        }
+
+        .positive-total {
+            color: #2e7d32;
+            background: #e8f5e9;
+        }
+
+        .negative-total {
+            color: #c62828;
+            background: #ffebee;
+        }
+
+        .game-cell {
+            font-weight: bold;
+            color: #2196F3;
+            background: #e3f2fd;
+        }
+
+        .add-game-btn {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(76,175,80,0.3);
+        }
+
+        .add-game-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(76,175,80,0.4);
         }
     </style>
 </head>
@@ -320,15 +529,15 @@
     </div>
 
     <div id="setup" class="tab-content active">
-        <div id="player-setup">
-            <label for="numPlayers">Enter the number of players: </label>
-            <input type="number" id="numPlayers" min="1" />
-            <button id="setupPlayers">Next</button>
-        </div>
+    <div id="player-setup">
+        <label for="numPlayers">Enter the number of players: </label>
+        <input type="number" id="numPlayers" min="1" />
+        <button id="setupPlayers">Next</button>
+    </div>
 
-        <div id="player-names" class="hidden">
-            <h2>Enter Player Names</h2>
-            <div id="nameInputs"></div>
+    <div id="player-names" class="hidden">
+        <h2>Enter Player Names</h2>
+        <div id="nameInputs"></div>
             <button id="generateTable">Start Scoring</button>
         </div>
     </div>
@@ -366,11 +575,9 @@
         </div>
     </div>
 
-    <div class="scoreboard-overlay" id="scoreboardOverlay"></div>
-    <div class="floating-scoreboard" id="floatingScoreboard">
-        <button class="scoreboard-close" onclick="hideScoreboard()">×</button>
-        <div class="scoreboard-title">Current Scores</div>
-        <div id="scoreboardContent"></div>
+    <div class="live-scores" id="liveScores">
+        <div class="live-score-title">Live Scores</div>
+        <div id="liveScoresContent"></div>
     </div>
 
     <script>
@@ -393,24 +600,7 @@
         let gameCounter = 0;
         let scores = [];
         let perGameScores = [];
-
-        setupPlayersButton.addEventListener('click', () => {
-            const numPlayers = parseInt(numPlayersInput.value);
-            if (numPlayers > 0) {
-                nameInputsDiv.innerHTML = '';
-                for (let i = 0; i < numPlayers; i++) {
-                    const input = document.createElement('input');
-                    input.type = 'text';
-                    input.placeholder = `Player ${i + 1} Name`;
-                    input.required = true;
-                    nameInputsDiv.appendChild(input);
-                }
-                playerSetupDiv.classList.add('hidden');
-                playerNamesDiv.classList.remove('hidden');
-            } else {
-                alert('Please enter a valid number of players.');
-            }
-        });
+        let previousScores = [];
 
         generateTableButton.addEventListener('click', () => {
             const nameInputs = nameInputsDiv.querySelectorAll('input');
@@ -430,9 +620,49 @@
 
             tableBody.innerHTML = '';
             playerNamesDiv.classList.add('hidden');
-            
+            scoreTableDiv.classList.remove('hidden');
             // Switch to scores tab
             document.querySelector('.tab[data-tab="scores"]').click();
+            updateLiveScores && updateLiveScores();
+        });
+
+        // Automatically go to scores after entering last player name
+        function setupAutoGoToScores() {
+            const nameInputs = nameInputsDiv.querySelectorAll('input');
+            if (nameInputs.length > 0) {
+                const lastInput = nameInputs[nameInputs.length - 1];
+                // On Enter key
+                lastInput.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
+                        generateTableButton.click();
+                    }
+                });
+                // On blur (leaving the field)
+                lastInput.addEventListener('blur', () => {
+                    if (lastInput.value.trim() !== '') {
+                        generateTableButton.click();
+                    }
+                });
+            }
+        }
+
+        setupPlayersButton.addEventListener('click', () => {
+            const numPlayers = parseInt(numPlayersInput.value);
+            if (numPlayers > 0) {
+                nameInputsDiv.innerHTML = '';
+                for (let i = 0; i < numPlayers; i++) {
+                    const input = document.createElement('input');
+                    input.type = 'text';
+                    input.placeholder = `Player ${i + 1} Name`;
+                    input.required = true;
+                    nameInputsDiv.appendChild(input);
+                }
+                playerSetupDiv.classList.add('hidden');
+                playerNamesDiv.classList.remove('hidden');
+                setupAutoGoToScores();
+            } else {
+                alert('Please enter a valid number of players.');
+            }
         });
 
         function showNotification(message, type = 'success') {
@@ -458,8 +688,38 @@
             input.type = 'number';
             input.className = 'score-input';
             input.value = value;
-            input.addEventListener('input', onChange);
+            
+            // Add input event listener for immediate updates
+            input.addEventListener('input', (e) => {
+                const newValue = parseInt(e.target.value) || 0;
+                onChange(newValue);
+            });
+            
+            // Add change event listener for when input loses focus
+            input.addEventListener('change', (e) => {
+                const newValue = parseInt(e.target.value) || 0;
+                onChange(newValue);
+            });
+            
             return input;
+        }
+
+        function createConfetti() {
+            const colors = ['#f44336', '#2196F3', '#4CAF50', '#FFC107', '#9C27B0'];
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.animationDelay = Math.random() * 3 + 's';
+                document.body.appendChild(confetti);
+                setTimeout(() => confetti.remove(), 3000);
+            }
+        }
+
+        function calculateNetScores(gameScores) {
+            const totalSum = gameScores.reduce((sum, score) => sum + score, 0);
+            return gameScores.map(score => score === 0 ? totalSum : -score);
         }
 
         function showScoreboard() {
@@ -467,19 +727,30 @@
             const overlay = document.getElementById('scoreboardOverlay');
             const content = document.getElementById('scoreboardContent');
             
-            // Clear previous content
             content.innerHTML = '';
             
-            // Add player scores
+            if (gameCounter > 0) {
+                const gameNumber = document.createElement('div');
+                gameNumber.className = 'game-number';
+                gameNumber.textContent = `Game ${gameCounter}`;
+                scoreboard.insertBefore(gameNumber, content);
+            }
+            
+            // Calculate net scores for the current game
+            const currentGameScores = perGameScores[perGameScores.length - 1] || Array(playerNames.length).fill(0);
+            const netScores = calculateNetScores(currentGameScores);
+            
             playerNames.forEach((name, index) => {
                 const scoreDiv = document.createElement('div');
                 scoreDiv.className = 'player-score';
-                const score = scores[index];
-                const scoreClass = score >= 0 ? 'positive-score' : 'negative-score';
+                const netScore = netScores[index];
+                const scoreClass = netScore >= 0 ? 'positive-score' : 'negative-score';
                 
                 scoreDiv.innerHTML = `
                     <span class="player-name">${name}</span>
-                    <span class="total-score ${scoreClass}">${score}</span>
+                    <div>
+                        <span class="total-score ${scoreClass}">${netScore}</span>
+                    </div>
                 `;
                 content.appendChild(scoreDiv);
             });
@@ -488,8 +759,12 @@
             scoreboard.style.display = 'block';
             overlay.style.display = 'block';
             
-            // Hide after 3 seconds
-            setTimeout(hideScoreboard, 3000);
+            // Create confetti for positive scores
+            if (netScores.some(score => score > 0)) {
+                createConfetti();
+            }
+            
+            setTimeout(hideScoreboard, 4000);
         }
 
         function hideScoreboard() {
@@ -503,75 +778,121 @@
             totalRow.querySelectorAll('td').forEach((cell, index) => {
                 if (index > 0) {
                     const newScore = scores[index - 1];
-                    updateScoreCell(cell, newScore);
+                    cell.textContent = newScore;
+                    cell.className = `total-cell ${newScore >= 0 ? 'positive-total' : 'negative-total'}`;
                 }
             });
-
-            // Show floating scoreboard when scores are updated
-            showScoreboard();
             updateSummary();
         }
 
         function updateSummary() {
-            // Regular Scores Table
-            regularTable.innerHTML = '<tr><th>Player</th><th>Total Score</th></tr>';
-            playerNames.forEach((name, index) => {
+    // Regular Scores Table
+    regularTable.innerHTML = '<tr><th>Player</th><th>Total Score</th></tr>';
+    playerNames.forEach((name, index) => {
                 const row = document.createElement('tr');
+                const score = scores[index];
+                const scoreClass = score >= 0 ? 'positive-total' : 'negative-total';
+                
                 row.innerHTML = `
                     <td class="player-name">${name}</td>
-                    <td class="total-score">${scores[index]}</td>
+                    <td class="total-cell ${scoreClass}">${score}</td>
                 `;
                 regularTable.appendChild(row);
-            });
+    });
 
-            // Net Scores Table
-            negativeTable.innerHTML = '<tr><th>Game/Player</th></tr>';
-            const netScores = Array(playerNames.length).fill(0);
+    // Net Scores Table
+    negativeTable.innerHTML = '<tr><th>Game/Player</th></tr>';
+    const netScores = Array(playerNames.length).fill(0);
 
             // Add player names as headers
             playerNames.forEach(name => {
-                const th = document.createElement('th');
-                th.textContent = name;
-                negativeTable.querySelector('tr').appendChild(th);
-            });
+        const th = document.createElement('th');
+        th.textContent = name;
+        negativeTable.querySelector('tr').appendChild(th);
+    });
 
             // Add net scores for each game
-            perGameScores.forEach((gameScores, gameIndex) => {
-                const row = document.createElement('tr');
-                const gameCell = document.createElement('td');
-                gameCell.textContent = `Game ${gameIndex + 1}`;
-                row.appendChild(gameCell);
+    perGameScores.forEach((gameScores, gameIndex) => {
+        const row = document.createElement('tr');
+        const gameCell = document.createElement('td');
+        gameCell.textContent = `Game ${gameIndex + 1}`;
+                gameCell.className = 'game-cell';
+        row.appendChild(gameCell);
 
-                const totalSum = gameScores.reduce((sum, score) => sum + score, 0);
+        const totalSum = gameScores.reduce((sum, score) => sum + score, 0);
 
-                gameScores.forEach((score, playerIndex) => {
-                    const netScore = score === 0 ? totalSum : -score;
-                    netScores[playerIndex] += netScore;
+        gameScores.forEach((score, playerIndex) => {
+            const netScore = score === 0 ? totalSum : -score;
+            netScores[playerIndex] += netScore;
 
-                    const cell = document.createElement('td');
-                    cell.textContent = netScore;
-                    cell.className = netScore >= 0 ? 'positive-score' : 'negative-score';
-                    row.appendChild(cell);
-                });
+            const cell = document.createElement('td');
+            cell.textContent = netScore;
+                    cell.className = netScore >= 0 ? 'positive-total' : 'negative-total';
+            row.appendChild(cell);
+        });
 
-                negativeTable.appendChild(row);
+        negativeTable.appendChild(row);
+    });
+
+    // Add total row
+    const totalRow = document.createElement('tr');
+    const totalCell = document.createElement('td');
+    totalCell.textContent = 'Total';
+            totalCell.className = 'game-cell';
+    totalRow.appendChild(totalCell);
+
+    netScores.forEach((total) => {
+        const cell = document.createElement('td');
+        cell.textContent = total;
+                cell.className = total >= 0 ? 'positive-total' : 'negative-total';
+        totalRow.appendChild(cell);
+    });
+
+    negativeTable.appendChild(totalRow);
+    summarySection.classList.remove('hidden');
+}
+
+        function updateLiveScores() {
+            const content = document.getElementById('liveScoresContent');
+            content.innerHTML = '';
+
+            // Calculate net scores for the current game
+            const currentGameScores = perGameScores[perGameScores.length - 1] || Array(playerNames.length).fill(0);
+            const netScores = calculateNetScores(currentGameScores);
+
+            playerNames.forEach((name, index) => {
+                const scoreDiv = document.createElement('div');
+                scoreDiv.className = 'live-player-score';
+                const netScore = netScores[index];
+                const scoreClass = netScore >= 0 ? 'live-positive-score' : 'live-negative-score';
+
+                const scoreSpan = document.createElement('span');
+                scoreSpan.className = `live-total-score ${scoreClass}`;
+                scoreSpan.textContent = netScore;
+
+                scoreDiv.innerHTML = `
+                    <span class="live-player-name">${name}</span>
+                `;
+                scoreDiv.appendChild(scoreSpan);
+                content.appendChild(scoreDiv);
+
+                // Add animation class
+                scoreSpan.classList.add('updated');
+                setTimeout(() => scoreSpan.classList.remove('updated'), 500);
             });
 
-            // Add total row with animations
-            const totalRow = document.createElement('tr');
-            const totalCell = document.createElement('td');
-            totalCell.textContent = 'Total';
-            totalRow.appendChild(totalCell);
-
-            netScores.forEach((total) => {
-                const cell = document.createElement('td');
-                cell.textContent = total;
-                cell.className = total >= 0 ? 'positive-score' : 'negative-score';
-                totalRow.appendChild(cell);
-            });
-
-            negativeTable.appendChild(totalRow);
-            summarySection.classList.remove('hidden');
+            // Update game number
+            const gameIndicator = document.querySelector('.game-indicator');
+            if (gameCounter > 0) {
+                if (!gameIndicator) {
+                    const newGameIndicator = document.createElement('div');
+                    newGameIndicator.className = 'game-indicator';
+                    newGameIndicator.textContent = `Game ${gameCounter}`;
+                    document.getElementById('liveScores').appendChild(newGameIndicator);
+                } else {
+                    gameIndicator.textContent = `Game ${gameCounter}`;
+                }
+            }
         }
 
         // Modify the addGameButton click handler
@@ -580,14 +901,15 @@
             const row = document.createElement('tr');
             const gameCell = document.createElement('td');
             gameCell.textContent = `Game ${gameCounter}`;
+            gameCell.className = 'game-cell';
             row.appendChild(gameCell);
 
             const gameScores = Array(playerNames.length).fill(0);
 
             playerNames.forEach((_, index) => {
                 const scoreCell = document.createElement('td');
-                const scoreInput = createScoreInput(0, () => {
-                    gameScores[index] = parseInt(scoreInput.value) || 0;
+                const scoreInput = createScoreInput(0, (newValue) => {
+                    gameScores[index] = newValue;
                     scores[index] = Array.from(
                         tableBody.querySelectorAll(`tr td:nth-child(${index + 2}) input`)
                     ).reduce((sum, input) => sum + (parseInt(input.value) || 0), 0);
@@ -600,9 +922,6 @@
             tableBody.appendChild(row);
             perGameScores.push(gameScores);
             updateScores();
-
-            // Show notification for new game
-            showNotification(`Game ${gameCounter} started!`);
         });
 
         // Add tab switching functionality with animations
