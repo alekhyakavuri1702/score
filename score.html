@@ -380,142 +380,119 @@
             position: fixed;
             top: 20px;
             right: 20px;
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255, 255, 0.98);
             padding: 20px;
             border-radius: 15px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.2);
             z-index: 100;
-            min-width: 250px;
-            animation: slideIn 0.3s ease-out;
+            min-width: 300px;
+            max-width: 400px;
+            backdrop-filter: blur(10px);
         }
 
         .live-score-title {
             text-align: center;
             font-size: 20px;
             color: #333;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
             font-weight: bold;
             border-bottom: 2px solid #eee;
             padding-bottom: 10px;
         }
 
-        .live-player-score {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px;
-            margin: 5px 0;
-            background: #f8f9fa;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-        }
-
-        .live-player-score:hover {
-            transform: translateX(-5px);
-            background: #f1f3f5;
-        }
-
-        .live-player-name {
-            font-weight: bold;
+        .live-score-subtitle {
+            text-align: center;
             color: #2196F3;
-        }
-
-        .live-total-score {
-            font-size: 18px;
             font-weight: bold;
-            padding: 5px 15px;
-            border-radius: 15px;
-            animation: scorePop 0.5s ease;
-            transition: all 0.3s ease;
-        }
-
-        .live-total-score.updated {
-            animation: scorePop 0.5s ease;
-            transform: scale(1.1);
-        }
-
-        .live-positive-score {
-            background: linear-gradient(135deg, #81c784, #4caf50);
-            color: white;
-        }
-
-        .live-negative-score {
-            background: linear-gradient(135deg, #e57373, #f44336);
-            color: white;
-        }
-
-        .game-indicator {
-            position: absolute;
-            top: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #2196F3;
-            color: white;
-            padding: 5px 15px;
-            border-radius: 15px;
-            font-size: 14px;
-            font-weight: bold;
-        }
-
-        @keyframes scorePop {
-            0% { transform: scale(0.8); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-
-        @keyframes slideIn {
-            from { transform: translateX(100%); }
-            to { transform: translateX(0); }
-        }
-
-        /* Remove old floating scoreboard styles */
-        .floating-scoreboard, .scoreboard-overlay {
-            display: none !important;
-        }
-
-        .total-row {
-            background: #f8f9fa;
-            font-weight: bold;
-        }
-
-        .total-cell {
-            font-size: 18px;
-            padding: 12px;
-            animation: scorePop 0.5s ease;
-        }
-
-        .positive-total {
-            color: #2e7d32;
-            background: #e8f5e9;
-        }
-
-        .negative-total {
-            color: #c62828;
-            background: #ffebee;
-        }
-
-        .game-cell {
-            font-weight: bold;
-            color: #2196F3;
-            background: #e3f2fd;
-        }
-
-        .add-game-btn {
-            padding: 12px 30px;
-            background: linear-gradient(135deg, #4CAF50, #45a049);
-            color: white;
-            border: none;
-            border-radius: 8px;
+            margin-bottom: 15px;
             font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(76,175,80,0.3);
         }
 
-        .add-game-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(76,175,80,0.4);
+        .live-score-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .stat-item small {
+            color: #666;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+        .stat-item span {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2196F3;
+        }
+
+        .live-score-rankings {
+            background: #fff;
+            border-radius: 10px;
+            padding: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .ranking-header {
+            text-align: center;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .live-player-score {
+            position: relative;
+            padding-left: 35px;
+        }
+
+        .player-rank {
+            position: absolute;
+            left: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 24px;
+            height: 24px;
+            background: #f0f0f0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .rank-1 {
+            background: linear-gradient(135deg, #ffd700, #ffa000);
+            color: white;
+        }
+
+        .rank-2 {
+            background: linear-gradient(135deg, #C0C0C0, #9E9E9E);
+            color: white;
+        }
+
+        .rank-3 {
+            background: linear-gradient(135deg, #CD7F32, #8D6E63);
+            color: white;
+        }
+
+        .current-game-score {
+            font-size: 14px;
+            color: #666;
+            margin-top: 2px;
         }
     </style>
 </head>
@@ -577,7 +554,21 @@
 
     <div class="live-scores" id="liveScores">
         <div class="live-score-title">Live Scores</div>
-        <div id="liveScoresContent"></div>
+        <div class="live-score-subtitle" id="gameIndicator"></div>
+        <div class="live-score-stats">
+            <div class="stat-item">
+                <small>Games Played</small>
+                <span id="gamesPlayedCount">0</span>
+            </div>
+            <div class="stat-item">
+                <small>Total Points</small>
+                <span id="totalPointsCount">0</span>
+            </div>
+        </div>
+        <div class="live-score-rankings">
+            <div class="ranking-header">Player Rankings</div>
+            <div id="liveScoresContent"></div>
+        </div>
     </div>
 
     <script>
@@ -864,21 +855,31 @@
                 const scoreDiv = document.createElement('div');
                 scoreDiv.className = 'live-player-score';
                 const netScore = netScores[index];
-                const scoreClass = netScore >= 0 ? 'live-positive-score' : 'live-negative-score';
-
-                const scoreSpan = document.createElement('span');
-                scoreSpan.className = `live-total-score ${scoreClass}`;
-                scoreSpan.textContent = netScore;
+                const totalScore = scores[index];
+                const netScoreClass = netScore >= 0 ? 'live-positive-score' : 'live-negative-score';
+                const totalScoreClass = totalScore >= 0 ? 'live-positive-score' : 'live-negative-score';
 
                 scoreDiv.innerHTML = `
                     <span class="live-player-name">${name}</span>
+                    <div class="live-scores-container">
+                        <div class="live-score-item">
+                            <small>Net:</small>
+                            <span class="live-total-score ${netScoreClass}">${netScore}</span>
+                        </div>
+                        <div class="live-score-item">
+                            <small>Total:</small>
+                            <span class="live-total-score ${totalScoreClass}">${totalScore}</span>
+                        </div>
+                    </div>
                 `;
-                scoreDiv.appendChild(scoreSpan);
                 content.appendChild(scoreDiv);
 
-                // Add animation class
-                scoreSpan.classList.add('updated');
-                setTimeout(() => scoreSpan.classList.remove('updated'), 500);
+                // Add animation class to both scores
+                const scoreSpans = scoreDiv.querySelectorAll('.live-total-score');
+                scoreSpans.forEach(span => {
+                    span.classList.add('updated');
+                    setTimeout(() => span.classList.remove('updated'), 500);
+                });
             });
 
             // Update game number
@@ -945,3 +946,4 @@
     </script>
 </body>
 </html>
+
