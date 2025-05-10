@@ -17,7 +17,6 @@ let playerNames = [];
 let gameCounter = 0;
 let scores = [];
 let perGameScores = [];
-let previousScores = [];
 
 function showNotification(message, type = 'success') {
     const notification = document.createElement('div');
@@ -37,6 +36,18 @@ function updateScoreCell(cell, value) {
     setTimeout(() => cell.classList.remove('updated'), 500);
 }
 
+function syncPerGameScoresFromInputs() {
+    const rows = tableBody.querySelectorAll('tr');
+    perGameScores = [];
+    rows.forEach(row => {
+        const inputs = row.querySelectorAll('input');
+        if (inputs.length > 0) {
+            const gameScores = Array.from(inputs).map(input => parseInt(input.value) || 0);
+            perGameScores.push(gameScores);
+        }
+    });
+}
+
 function createScoreInput(value, onChange) {
     const input = document.createElement('input');
     input.type = 'number';
@@ -46,61 +57,90 @@ function createScoreInput(value, onChange) {
     input.addEventListener('input', (e) => {
         const newValue = parseInt(e.target.value) || 0;
         onChange(newValue);
+        syncPerGameScoresFromInputs();
+        updateScores();
         updateLiveScores();
     });
-    
-    input.addEventListener('change', (e) => {
-        const newValue = parseInt(e.target.value) || 0;
-        onChange(newValue);
-        updateLiveScores();
-    });
-    
     return input;
 }
 
-function calculateNetScores(gameScores) {
-    const totalSum = gameScores.reduce((sum, score) => sum + score, 0);
-    return gameScores.map(score => score === 0 ? totalSum : -score);
+function getPlayerNetTotals() {
+    const netTotals = Array(playerNames.length).fill(0);
+    perGameScores.forEach(gameScores => {
+        const totalSum = gameScores.reduce((sum, score) => sum + score, 0);
+        gameScores.forEach((score, index) => {
+            netTotals[index] += (score === 0 ? totalSum : -score);
+        });
+    });
+    return netTotals;
 }
 
 function updateLiveScores() {
     const content = document.getElementById('liveScoresContent');
+    if (!content) return;
     content.innerHTML = '';
+    const gamesPlayed = perGameScores.length;
+    document.getElementById('gamesPlayedCount').textContent = gamesPlayed;
+    document.getElementById('totalPointsCount').textContent = perGameScores.reduce((acc, scores) => acc + scores.reduce((a, s) => a + s, 0), 0);
 
-    // Update games played and total points
-    const gamesPlayedCount = document.getElementById('gamesPlayedCount');
-    const totalPointsCount = document.getElementById('totalPointsCount');
-    gamesPlayedCount.textContent = perGameScores.length;
-    let totalPoints = 0;
-    perGameScores.forEach(gameScores => {
-        totalPoints += gameScores.reduce((sum, score) => sum + score, 0);
-    });
-    totalPointsCount.textContent = totalPoints;
+    const netTotals = getPlayerNetTotals();
+    const ranking = playerNames.map((name, i) => ({ name, net: netTotals[i] })).sort((a, b) => b.net - a.net);
 
-    const currentGameScores = perGameScores[perGameScores.length - 1] || Array(playerNames.length).fill(0);
-    const netScores = calculateNetScores(currentGameScores);
-
-    playerNames.forEach((name, index) => {
-        const scoreDiv = document.createElement('div');
-        scoreDiv.className = 'live-player-score';
-        const netScore = netScores[index];
-        const netScoreClass = netScore >= 0 ? 'positive-score' : 'negative-score';
-
-        scoreDiv.innerHTML = `
-            <span class="player-name">${name}</span>
-            <span class="live-total-score ${netScoreClass}" style="margin-left: 10px; padding: 6px 16px; display: inline-block;">${netScore}</span>
+    ranking.forEach(player => {
+        const div = document.createElement('div');
+        div.className = 'live-player-score';
+        div.innerHTML = `
+            <span class="player-name">${player.name}</span>
+            <span class="live-total-score ${player.net >= 0 ? 'positive-score' : 'negative-score'}">${player.net}</span>
         `;
-        content.appendChild(scoreDiv);
-
-        const scoreSpan = scoreDiv.querySelector('.live-total-score');
-        scoreSpan.classList.add('updated');
-        setTimeout(() => scoreSpan.classList.remove('updated'), 500);
+        content.appendChild(div);
     });
 
-    const gameIndicator = document.getElementById('gameIndicator');
-    if (gameCounter > 0) {
-        gameIndicator.textContent = `Game ${gameCounter}`;
-    }
+    renderLiveNetSummary();
+}
+
+function renderLiveNetSummary() {
+    const container = document.getElementById('liveNetSummary');
+    if (!container) return;
+    container.innerHTML = '';
+    if (playerNames.length === 0 || perGameScores.length === 0) return;
+
+    const table = document.createElement('table');
+    table.className = 'live-net-table';
+    const thead = document.createElement('thead');
+    const headerRow = document.createElement('tr');
+    headerRow.innerHTML = '<th>Game/Player</th>' + playerNames.map(name => `<th>${name}</th>`).join('');
+    thead.appendChild(headerRow);
+    table.appendChild(thead);
+
+    const tbody = document.createElement('tbody');
+    const netScores = Array(playerNames.length).fill(0);
+    perGameScores.forEach((gameScores, gameIndex) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `<td>Game ${gameIndex + 1}</td>`;
+        const totalSum = gameScores.reduce((sum, score) => sum + score, 0);
+        gameScores.forEach((score, index) => {
+            const net = score === 0 ? totalSum : -score;
+            netScores[index] += net;
+            const cell = document.createElement('td');
+            cell.textContent = net;
+            cell.className = net >= 0 ? 'positive-score' : 'negative-score';
+            row.appendChild(cell);
+        });
+        tbody.appendChild(row);
+    });
+
+    const totalRow = document.createElement('tr');
+    totalRow.innerHTML = '<td>Total</td>';
+    netScores.forEach(score => {
+        const cell = document.createElement('td');
+        cell.textContent = score;
+        cell.className = score >= 0 ? 'positive-score' : 'negative-score';
+        totalRow.appendChild(cell);
+    });
+    tbody.appendChild(totalRow);
+    table.appendChild(tbody);
+    container.appendChild(table);
 }
 
 setupPlayersButton.addEventListener('click', () => {
@@ -125,7 +165,6 @@ generateTableButton.addEventListener('click', () => {
     const nameInputs = nameInputsDiv.querySelectorAll('input');
     playerNames = Array.from(nameInputs).map(input => input.value || 'Player');
     scores = Array(playerNames.length).fill(0);
-
     tableHeader.innerHTML = '<th>Game</th>';
     playerNames.forEach(name => {
         const th = document.createElement('th');
@@ -136,7 +175,6 @@ generateTableButton.addEventListener('click', () => {
         totalCell.textContent = 0;
         totalRow.appendChild(totalCell);
     });
-
     tableBody.innerHTML = '';
     playerNamesDiv.classList.add('hidden');
     scoreTableDiv.classList.remove('hidden');
@@ -147,41 +185,32 @@ generateTableButton.addEventListener('click', () => {
 addGameButton.addEventListener('click', () => {
     gameCounter++;
     const row = document.createElement('tr');
-    const gameCell = document.createElement('td');
-    gameCell.textContent = `Game ${gameCounter}`;
-    gameCell.className = 'game-cell';
-    row.appendChild(gameCell);
-
-    const gameScores = Array(playerNames.length).fill(0);
-
+    row.innerHTML = `<td class="game-cell">Game ${gameCounter}</td>`;
+    const scoresForGame = Array(playerNames.length).fill(0);
     playerNames.forEach((_, index) => {
-        const scoreCell = document.createElement('td');
-        const scoreInput = createScoreInput(0, (newValue) => {
-            gameScores[index] = newValue;
-            scores[index] = Array.from(
-                tableBody.querySelectorAll(`tr td:nth-child(${index + 2}) input`)
-            ).reduce((sum, input) => sum + (parseInt(input.value) || 0), 0);
-            updateScores();
+        const cell = document.createElement('td');
+        const input = createScoreInput(0, (val) => {
+            scoresForGame[index] = val;
+            scores[index] = Array.from(tableBody.querySelectorAll(`tr td:nth-child(${index + 2}) input`)).reduce((acc, input) => acc + (parseInt(input.value) || 0), 0);
         });
-        scoreCell.appendChild(scoreInput);
-        row.appendChild(scoreCell);
+        cell.appendChild(input);
+        row.appendChild(cell);
     });
-
     tableBody.appendChild(row);
-    perGameScores.push(gameScores);
+    syncPerGameScoresFromInputs();
     updateScores();
+    updateLiveScores();
     showNotification(`Game ${gameCounter} started!`);
 });
 
 function updateScores() {
     totalRow.querySelectorAll('td').forEach((cell, index) => {
         if (index > 0) {
-            const newScore = scores[index - 1];
-            cell.textContent = newScore;
-            cell.className = `total-cell pop-total ${newScore >= 0 ? 'positive-score' : 'negative-score'}`;
+            const score = scores[index - 1];
+            cell.textContent = score;
+            cell.className = `total-cell pop-total ${score >= 0 ? 'positive-score' : 'negative-score'}`;
         }
     });
-
     updateSummary();
     updateLiveScores();
 }
@@ -192,7 +221,6 @@ function updateSummary() {
         const row = document.createElement('tr');
         const score = scores[index];
         const scoreClass = score >= 0 ? 'positive-score' : 'negative-score';
-        
         row.innerHTML = `
             <td class="player-name">${name}</td>
             <td class="total-cell ${scoreClass}">${score}</td>
@@ -202,48 +230,33 @@ function updateSummary() {
 
     negativeTable.innerHTML = '<tr><th>Game/Player</th></tr>';
     const netScores = Array(playerNames.length).fill(0);
-
     playerNames.forEach(name => {
         const th = document.createElement('th');
         th.textContent = name;
         negativeTable.querySelector('tr').appendChild(th);
     });
-
     perGameScores.forEach((gameScores, gameIndex) => {
         const row = document.createElement('tr');
-        const gameCell = document.createElement('td');
-        gameCell.textContent = `Game ${gameIndex + 1}`;
-        gameCell.className = 'game-cell';
-        row.appendChild(gameCell);
-
+        row.innerHTML = `<td class="game-cell">Game ${gameIndex + 1}</td>`;
         const totalSum = gameScores.reduce((sum, score) => sum + score, 0);
-
-        gameScores.forEach((score, playerIndex) => {
-            const netScore = score === 0 ? totalSum : -score;
-            netScores[playerIndex] += netScore;
-
+        gameScores.forEach((score, index) => {
+            const net = score === 0 ? totalSum : -score;
+            netScores[index] += net;
             const cell = document.createElement('td');
-            cell.textContent = netScore;
-            cell.className = netScore >= 0 ? 'positive-score' : 'negative-score';
+            cell.textContent = net;
+            cell.className = net >= 0 ? 'positive-score' : 'negative-score';
             row.appendChild(cell);
         });
-
         negativeTable.appendChild(row);
     });
-
     const totalRow = document.createElement('tr');
-    const totalCell = document.createElement('td');
-    totalCell.textContent = 'Total';
-    totalCell.className = 'game-cell';
-    totalRow.appendChild(totalCell);
-
-    netScores.forEach((total) => {
+    totalRow.innerHTML = '<td>Total</td>';
+    netScores.forEach(score => {
         const cell = document.createElement('td');
-        cell.textContent = total;
-        cell.className = total >= 0 ? 'positive-score' : 'negative-score';
+        cell.textContent = score;
+        cell.className = score >= 0 ? 'positive-score' : 'negative-score';
         totalRow.appendChild(cell);
     });
-
     negativeTable.appendChild(totalRow);
     summarySection.classList.remove('hidden');
 }
@@ -255,10 +268,9 @@ document.querySelectorAll('.tab').forEach(tab => {
             c.classList.remove('active');
             c.style.display = 'none';
         });
-        
         tab.classList.add('active');
         const content = document.getElementById(tab.dataset.tab);
         content.style.display = 'block';
         content.classList.add('active');
     });
-}); 
+});

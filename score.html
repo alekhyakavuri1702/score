@@ -8,7 +8,7 @@
 </head>
 <body>
     <h1>Player Score Calculator</h1>
-    
+
     <div class="tabs">
         <div class="tab active" data-tab="setup">Setup</div>
         <div class="tab" data-tab="scores">Scores</div>
@@ -30,21 +30,23 @@
     </div>
 
     <div id="scores" class="tab-content">
-        <h2>Score Table</h2>
+        <h2>Net Scores (Per Game)</h2>
         <table>
             <thead>
                 <tr id="tableHeader">
                     <th>Game</th>
                 </tr>
             </thead>
-            <tbody id="tableBody">
-            </tbody>
+            <tbody id="tableBody"></tbody>
             <tfoot>
                 <tr id="totalRow">
                     <td>Total</td>
                 </tr>
             </tfoot>
         </table>
+        <div id="negativeSummary">
+            <table id="negativeTable"></table>
+        </div>
         <div class="controls">
             <button id="addGame">Next Game</button>
         </div>
@@ -62,26 +64,7 @@
         </div>
     </div>
 
-    <div class="live-scores" id="liveScores">
-        <div class="live-score-title">Live Scores</div>
-        <div class="live-score-subtitle" id="gameIndicator"></div>
-        <div class="live-score-stats">
-            <div class="stat-item">
-                <small>Games Played</small>
-                <span id="gamesPlayedCount">0</span>
-            </div>
-            <div class="stat-item">
-                <small>Total Points</small>
-                <span id="totalPointsCount">0</span>
-            </div>
-        </div>
-        <div class="live-score-rankings">
-            <div class="ranking-header">Player Rankings</div>
-            <div id="liveScoresContent"></div>
-        </div>
-    </div>
 
     <script src="script.js"></script>
 </body>
 </html>
-
