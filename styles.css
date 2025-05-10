@@ -1,0 +1,347 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    background-color: #f4f4f9;
+    color: #333;
+}
+h1, h2 {
+    text-align: center;
+    color: #444;
+}
+.hidden {
+    display: none;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background: #fff;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    border-radius: 10px;
+    overflow: hidden;
+}
+th, td {
+    padding: 15px;
+    text-align: center;
+    border: 1px solid #eee;
+}
+th {
+    background: linear-gradient(135deg, #2196F3, #1976D2);
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+}
+input[type="number"] {
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+}
+button {
+    padding: 10px 20px;
+    background-color: #5cb85c;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin: 5px;
+}
+button:hover {
+    background-color: #4cae4c;
+}
+.controls {
+    text-align: center;
+    margin: 20px 0;
+}
+.summary {
+    margin-top: 30px;
+}
+.summary table {
+    margin-top: 10px;
+}
+.tabs {
+    display: flex;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #ddd;
+}
+.tab {
+    padding: 10px 20px;
+    cursor: pointer;
+    background-color: #f1f1f1;
+    border: 1px solid #ddd;
+    border-bottom: none;
+    margin-right: 5px;
+    border-radius: 5px 5px 0 0;
+}
+.tab.active {
+    background-color: #fff;
+    border-bottom: 2px solid #5cb85c;
+}
+.tab-content {
+    display: none;
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-top: none;
+}
+.tab-content.active {
+    display: block;
+}
+.player-input {
+    margin: 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+/* Animation styles */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scorePop {
+    0% { transform: scale(0.8); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+@keyframes slideIn {
+    from { transform: translateX(-100%); }
+    to { transform: translateX(0); }
+}
+
+.score-notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px;
+    background: #4CAF50;
+    color: white;
+    border-radius: 5px;
+    animation: fadeIn 0.5s ease-out;
+    z-index: 1000;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.score-cell {
+    transition: all 0.3s ease;
+}
+
+.score-cell.updated {
+    animation: scorePop 0.5s ease;
+    background-color: #e8f5e9;
+}
+
+.tab-content {
+    animation: slideIn 0.3s ease-out;
+}
+
+.table-container {
+    overflow-x: auto;
+    margin: 20px 0;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.score-input {
+    width: 80px;
+    padding: 8px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.score-input:focus {
+    border-color: #2196F3;
+    box-shadow: 0 0 8px rgba(33,150,243,0.3);
+    outline: none;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin: 15px 0;
+}
+
+.action-button {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: bold;
+}
+
+.add-score {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.edit-score {
+    background-color: #2196F3;
+    color: white;
+}
+
+.delete-score {
+    background-color: #f44336;
+    color: white;
+}
+
+.action-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.player-name {
+    font-weight: bold;
+    color: #2196F3;
+}
+
+.total-score {
+    font-weight: bold;
+    color: #4CAF50;
+}
+
+.negative-score {
+    color: #f44336;
+    background-color: #ffebee !important;
+    border-radius: 6px;
+}
+
+.positive-score {
+    color: #4CAF50;
+    background-color: #e8f5e9 !important;
+    border-radius: 6px;
+}
+
+.live-scores {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: rgba(255, 255, 255, 0.98);
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    z-index: 100;
+    min-width: 300px;
+    max-width: 400px;
+    backdrop-filter: blur(10px);
+}
+
+.live-score-title {
+    text-align: center;
+    font-size: 20px;
+    color: #333;
+    margin-bottom: 10px;
+    font-weight: bold;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+}
+
+.live-score-subtitle {
+    text-align: center;
+    color: #2196F3;
+    font-weight: bold;
+    margin-bottom: 15px;
+    font-size: 16px;
+}
+
+.live-score-stats {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 10px;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.stat-item small {
+    color: #666;
+    font-size: 12px;
+    text-transform: uppercase;
+}
+
+.stat-item span {
+    font-size: 20px;
+    font-weight: bold;
+    color: #2196F3;
+}
+
+.live-score-rankings {
+    background: #fff;
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.ranking-header {
+    text-align: center;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #eee;
+}
+
+.live-player-score {
+    position: relative;
+    padding-left: 35px;
+}
+
+.player-rank {
+    position: absolute;
+    left: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 24px;
+    height: 24px;
+    background: #f0f0f0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 14px;
+    color: #666;
+}
+
+.rank-1 {
+    background: linear-gradient(135deg, #ffd700, #ffa000);
+    color: white;
+}
+
+.rank-2 {
+    background: linear-gradient(135deg, #C0C0C0, #9E9E9E);
+    color: white;
+}
+
+.rank-3 {
+    background: linear-gradient(135deg, #CD7F32, #8D6E63);
+    color: white;
+}
+
+.current-game-score {
+    font-size: 14px;
+    color: #666;
+    margin-top: 2px;
+}
+
+.pop-total {
+    font-size: 1.2em;
+    font-weight: bold;
+    background: linear-gradient(90deg, #fffde4 0%, #f7f7ff 100%);
+    box-shadow: 0 2px 8px rgba(33,150,243,0.08);
+    border: 2px solid #2196F3;
+    color: #222 !important;
+    letter-spacing: 1px;
+} 
