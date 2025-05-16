@@ -12,6 +12,7 @@
     <div class="tabs">
         <div class="tab active" data-tab="setup">Setup</div>
         <div class="tab" data-tab="scores">Scores</div>
+        <div class="tab" data-tab="history">History</div>
         <div class="tab" data-tab="summary">Summary</div>
     </div>
 
@@ -49,21 +50,52 @@
         </div>
         <div class="controls">
             <button id="addGame">Next Game</button>
+            <button id="addScore">Add Score</button>
         </div>
     </div>
 
     <div id="summary" class="tab-content">
         <h2>Summary</h2>
-        <div id="regularSummary">
-            <h3>Regular Scores</h3>
-            <table id="regularTable"></table>
-        </div>
-        <div id="negativeSummary">
-            <h3>Net Scores (Per Game)</h3>
-            <table id="negativeTable"></table>
-        </div>
+        <table id="summaryTable">
+            <thead>
+                <tr>
+                    <th>Player</th>
+                    <th>Net Score</th>
+                    <th>Regular Score</th>
+                    <th>Drops</th>
+                    <th>Wins</th>
+                    <th>Special Count</th>
+                </tr>
+            </thead>
+            <tbody id="summaryTableBody">
+                <!-- Summary rows will be added dynamically -->
+            </tbody>
+        </table>
     </div>
 
+    <div id="history" class="tab-content">
+        <h2>Game History</h2>
+        <div class="history-container">
+            <table id="historyTable">
+                <thead>
+                    <tr>
+                        <th>Game #</th>
+                        <th>Date</th>
+                        <th>Player</th>
+                        <th>Score</th>
+                        <th>Net Score</th>
+                    </tr>
+                </thead>
+                <tbody id="historyTableBody">
+                    <!-- History entries will be added here dynamically -->
+                </tbody>
+            </table>
+        </div>
+        <div class="history-controls">
+            <button id="exportHistory">Export History</button>
+            <button id="clearHistory">Clear History</button>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>
